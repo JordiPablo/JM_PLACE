@@ -8,7 +8,32 @@
 
 </head>
 <body>
-    <h1 class = "title col-12" > cuenta administrador </h1>
+    <nav class="navbar navbar-expand-lg navbar navbar-dark col-12">
+        <div class="col-3" >
+            <h1 style="color: white; "> Cuenta administrador </h1>
+        </div>
+        <div class="collapse navbar-collapse col-6" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link " href="#all_suppliers"> Proveedores <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#all_buyers">Compradores</a>
+                <a class="nav-item nav-link" href="#">Los más vendidos en la web</a>
+            </div>
+        </div>
+        <div class="col-3 top_seller" style="display: flex;">
+            <div class="col-7" style="padding: 0.5rem 1rem;">
+                <p class="card-text" >Hola, {{user_obj.name}}</p> 
+            </div>
+            <div class="col-5 " style="padding: 0.5rem 1rem;">
+                <form action="/close_sesion/{{user_obj.id}}", method="POST">
+                    <button type="submit" class="btn btn btn-success btn-sm button_close_session_seller" >Cerrar sessión</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <h1 class = "title col-3" style = "font-size: 36px;" > Clientes proveedores</h1>
 
     <div class= "col-12" id= "all_suppliers">
         <table class="table text-center " >
@@ -17,14 +42,14 @@
                     <th scope="col">Nombre</th>
                     <th scope="col">Email</th>
                     <th scope="col">Telefono</th>
-                    <th scope="col">Nº productos</th>
+                    <th scope="col">Nº productos en venta</th>
                     <th scope="col"> </th>
                 </tr>
 
             </thead>
             <tbody>
 
-                {% for user in obj_all_users%}
+                {% for user in obj_all_users_sellers%}
                 <tr>
                     <th scope="row">{{user.name}}</th>
                     <td>{{user.email}}</td>
@@ -41,4 +66,40 @@
             </tbody>
         </table>
     </div>
+</body>
+
+
+<h1 class = "title col-3" style = "font-size: 36px;" > Clientes compradores</h1>
+
+<div class= "col-12" id= "all_buyers">
+    <table class="table text-center " >
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Nº productos comprados</th>
+                <th scope="col"> </th>
+            </tr>
+
+        </thead>
+        <tbody>
+
+            {% for user in obj_all_users_buyers%}
+            <tr>
+                <th scope="row">{{user.name}}</th>
+                <td>{{user.email}}</td>
+                <td>{{user.phone}}</td>
+                <td>{{user.total_buyed}}</td>
+                <td>
+                    <form action="", method="POST">
+                        <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Ver/Modificar</button>
+                    </form>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 </body>

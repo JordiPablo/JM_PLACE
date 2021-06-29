@@ -112,16 +112,28 @@ def login():
             
             if user.type == 'Administrador':
 
-                all_users_=db.session.query(User).filter_by(type = 'Vendedor').all()
+                all_sellers=db.session.query(User).filter_by(type = 'Vendedor').all()
                 list_num_products= []
-                for user in all_users_:
-                    print (user.name)
+                for user in all_sellers:
+                    
                     if user.type == 'Vendedor':
                         all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
                         num_products = len (all_products_)
                         list_num_products.append(num_products)
 
-                return render_template('admin.html',obj_all_users=all_users_,num_products=list_num_products)
+                all_buyers=db.session.query(User).filter_by(type = 'Comprador').all()
+                list_num_products= []
+                for user_buyer in all_buyers:
+                    
+                    if user_buyer.type == 'Comprador':
+                        all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
+                        num_products = len (all_products_)
+                        list_num_products.append(num_products) 
+
+
+
+
+                return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products, obj_all_users_buyers=all_buyers)
 
 
     return render_template('wrong_login.html')
@@ -151,7 +163,9 @@ def cesta (id,num_buyed):
 @app.route ('/confirm_buy/<id>',methods=['POST'])
 def confirm_buy (id):
     all_products_carrito = db.session.query(Carrito).all()
+    count =0 #contador de productos comprados por el usuario
     for products in all_products_carrito:
+        count +=1 
         item_bought = Buyed (
             ref_PBuyed = products.referenceC,
             cuantity_PBuyed =products.cantidadC,
@@ -162,6 +176,7 @@ def confirm_buy (id):
     db.session.query(Carrito).delete()
     user = db.session.query(User).filter_by(id=int(id)).first()
     user.num_buyed = 0
+    user.total_buyed +=count
     db.session.commit()
     return render_template('buyDone.html', user_obj=user)
 

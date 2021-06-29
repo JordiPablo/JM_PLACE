@@ -18,9 +18,10 @@ class User (db.Base):
     type = Column (String(50))
     name_buyed= Column (String(50))
     num_buyed = Column (Integer)
+    total_buyed = Column (Integer)
 
 
-    def __init__ (self,name,surnames,sex,phone,province,email,password,type,name_buyed='',num_buyed=0):
+    def __init__ (self,name,surnames,sex,phone,province,email,password,type,name_buyed='',num_buyed=0,total_buyed=0 ):
         self.name = name
         self.surnames = surnames
         self.sex = sex
@@ -31,6 +32,7 @@ class User (db.Base):
         self.type = type # could be suplier, client,admin
         self.name_buyed = name_buyed #nombre producto comprado
         self.num_buyed=num_buyed #cantidad producto comprado
+        self.total_buyed=total_buyed
 
 class Product (db.Base): ############# OJOOOOO FALTARIA FOTOOO###########
 
