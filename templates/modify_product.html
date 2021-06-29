@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >Modificar</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="col-12">
+        <h1 class = "title col-12" > Editar producto </h1>
+    </div>
+
+    <form action="/confirm_modify/{{product_obj.id}}/{{user_obj.id}}", method="POST">
+        <div class="col-12" style="display:flex">
+            
+            <div class="card col-4 card_columns card_clas">
+
+                <ul class="list-group list-group-flush">
+                    
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Nombre actual:</li>
+                    <input type="text" name="new_name" id="new_name" class="list-group-item" value= "{{product_obj.name}}">
+
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Descripción actual:</li>
+                    <textarea type="text" name="new_description" id="new_description" class="list-group-item"> {{product_obj.description}}</textarea>
+
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Referencia actual:</li>
+                    <input type="text" name="new_ref" id="new_ref" class="list-group-item" value= "{{product_obj.reference}}">
+
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Precio actual (€):</li>
+                    <input type="number" name="new_price" id="new_price" class="list-group-item" value= {{product_obj.price}}>
+
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Unidades disponibles:</li>
+                    <input type="number" name="new_NumItem" id="new_NumItem" class="list-group-item" value= "{{product_obj.numItems}}">
+
+                    <li class="list-group-item" style="background-color: #9dd4ff;">Ubicación almacen: </li>
+                    <input type="text" name="new_warehouse_place" id="new_warehouse_place" class="list-group-item" value= "{{product_obj.warehouse_place}}">
+                    
+                    <div class="col-12" style="display:flex">
+                        <div class="col-6">
+                            
+                                <button type="submit" class="btn btn btn-success btn-lg button_modify" >Modificar</button>
+    </form>
+                        </div>
+                        <div class="col-6">
+                            <form action="/delete_product/{{product_obj.id}}/{{user_obj.id}}", method="POST">
+                                <button type="submit" class="btn btn btn-success btn-lg button_delete_seller" >Eliminar producto</button>
+                            </form>
+                        </div>
+                    </div>
+            </ul>
+        </div>
+        <div class="col-3" style="margin-left: 50px; margin-top: 200px;">
+            <img src= "../images/minion.jpg" class="card-img-top" alt="...">
+            <th>Cambiar iamgen</th>
+        </div>
+
+    </div>
+</body>

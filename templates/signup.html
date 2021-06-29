@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >Registrate</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<!------ card from login ---------->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+
+</head>
+<body>
+    <h1 class="title"> Bienvenido a JM Market</h1>
+    <div id="login "></div>
+        <div class="container">
+            <div id="login-row" class="row">
+                <div id="login-column" class="col-md-3">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="sign_up" method="post">
+                            <div class = "row">
+                                <div class="form-group col-6">
+                                    <label for="name" class="singinletter">Nombre:</label><br>
+                                    <input type="text" name="name" id="name" class="form-control">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="surnames" class="singinletter">Apellidos:</label><br>
+                                    <input type="text" name="surnames" id="surnames" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="sex" class="singinletter">Sexo:  </label>
+                                    <select class="form-select" id="sex" name="cont_sex">
+                                    <option name="cont_sex" value ="Hombre">Hombre</option>
+                                    <option name="cont_sex" value ="Mujer">Mujer</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="province" class="singinletter">Provincia:  </label>
+                                    <select class="form-select" id="province" name="province">
+                                    <option name="province" value ="Barcelona">Barcelona</option>
+                                    <option name="province" value ="Lleida">Lleida</option>
+                                    <option name="rovince" value ="Tarragona">Tarragona</option>
+                                    <option name="province" value ="Gerona">Gerona</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="singinletter">Móvil: </label><br>
+                                <input type="text" name="phone" id="phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="singinletter">Email: </label><br>
+                                <input type="text" name="email" id="email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="singinletter">Contraseña: </label><br>
+                                <input type="text" name="password" id="password" class="form-control">
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-8">
+                                    <label for="type" class="singinletter">Tipo:  </label>
+                                    <select class="form-select" id="type" name="type">
+                                    <option name="type" value ="Comprador">Comprador</option>
+                                    <option name="type" value ="Vendedor">Vendedor</option>
+                                    <option name="type" value ="Administrador">Administrador</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info btn-md" >Crear cuenta</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <img src="./images/global.png">
+    </div>
+
+
+</body>
+</html>

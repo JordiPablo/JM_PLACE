@@ -1,0 +1,70 @@
+
+
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >Cesta de la compra</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="col-12">
+        <h1 class = "title col-12" > Carrito de la compra</h1>
+    </div>
+
+    <div class= "col-12">
+        <table class="table text-center ">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Referencia</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                {% set tcuanti = namespace(totalCuant = 0 ) %}
+                {% set tprice = namespace (totalPrice = 0) %}
+                {% for product in all_products%}
+                <tr>
+                    <th scope="row">{{product.referenceC}}</th>
+                    <td>{{product.nameC}}</td>
+                    <td>{{product.cantidadC}}</td>
+                    <td>{{product.priceC}}</td>
+                    <td>
+                        <form action="/delete_item/{{product.referenceC}}/{{obj_user.id}}/{{obj_user.num_buyed}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_delete " >Eliminar</button>
+                        </form>
+                    </td>
+                    {% set tcuanti.totalCuant = tcuanti.totalCuant + product.cantidadC %}
+                    {% set tprice.totalPrice = tprice.totalPrice + (product.cantidadC * product.priceC) %}
+
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                  <td></td>
+                  <td style="font-weight: bold; color: white; font-size: 25px;">Total</td>
+                  <td style="font-weight: bold; color: white; font-size: 25px;">{{tcuanti.totalCuant}}</td>
+                  <td style="font-weight: bold; color: white; font-size: 25px;">{{tprice.totalPrice}} €</td>
+                  <td>
+                    <form action="/confirm_buy/{{obj_user.id}}", method="POST">
+                        <button type="submit" class="btn btn btn-success btn-lg " style="float:left;" >COMPRAR</button>
+                    </form>
+                  </td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="col-12">
+            <form action="/shop/{{obj_user.id}}/{{obj_user.num_buyed}}">
+                <button type="submit" class="btn btn btn-success btn-block " style ="font-size: 20px; background-color: blue; border-color: blue;" >Seguir comprando</button>
+            </form>
+        </div>
+    </div>     
+</body>

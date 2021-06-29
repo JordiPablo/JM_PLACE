@@ -1,0 +1,150 @@
+body{
+    background: #667db6;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #667db6, #0082c8, #0082c8, #667db6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.carrito{
+    margin-right: 10px;
+}
+
+
+.title {
+    color: white;
+    -webkit-text-stroke: 2px white;
+    margin-top: 100px;
+    text-align: center;
+    font-size: 70px ;
+}
+.estadistics{
+    color: white;
+    -webkit-text-stroke: 2px white;
+    margin-top: 100px;
+    margin-left: 0px;
+    text-align: left;
+    font-size: 40px ;
+}
+.add_product{
+    color: white;
+    -webkit-text-stroke: 2px white;
+    margin-top: 100px;
+    margin-left: 40px;
+    text-align: left;
+    font-size: 40px ;
+}
+
+
+.volver_intentar{
+    font-size: 20px !important;
+    background-color: blue !important;
+    border-color: rgb(1, 1, 163) !important;
+    margin-top: 20px;
+    color:white !important;
+}
+
+.wrong_letter{
+    text-align: center;
+    margin-top: 200px;
+    color: white;
+}
+
+.singinletter{
+    color : white;
+
+}
+.regiterfont{
+    color: white;
+    font-size: 20px !important;
+}
+.card_clas{
+    background-color: rgb(190, 221, 235) !important;
+
+}
+
+.card_columns {
+    border-radius: 10px !important;
+    margin: 10px !important;
+    padding: 10px !important;
+}
+
+.button_ver_modificar{
+    float: center !important;
+    background-color: blue !important;
+    border-color: blue !important;
+}
+
+.button_delete{
+    float: left !important;
+    background-color: red !important;
+    border-color: red !important;
+}
+.button_modify{
+    float: left!important;
+    margin-left: 10px;
+    margin-top: 5px;
+    background-color: orange !important;
+    border-color: orange !important;
+}
+.button_delete_seller{
+    float: right!important;
+    margin-right: 10px;
+    margin-top: 5px;
+    background-color: red !important;
+    border-color: red !important;
+}
+
+.button_close_session{
+    float: right !important;
+    background-color: red !important;
+    border-color: red !important;
+    margin-top: 15px !important;
+}
+.button_close_session_seller{
+    float: right !important;
+    background-color: red !important;
+    border-color: red !important;
+}
+
+.button_cesta {
+    float: left !important;
+    margin-top: 15px;
+    background-color: blue !important;
+    border-color: blue !important;
+}
+
+.button_buy {
+    margin-top: 5px;
+
+}
+.button_iniciarSesion {
+    font-size: 20px !important;
+    background-color: blue !important;
+    border-color: blue !important;
+
+}
+.top_shop{
+    margin-top: 20px;
+    text-align: left;
+    font-size: 20px;
+    color: white;
+}
+
+.top_seller{
+    text-align: left;
+    font-size: 20px;
+    color: white;
+}
+.div_top{
+
+text-align: left;
+}
+.div_carrito{
+    float:left !important;
+    margin-top: 20px;
+    color: white;
+    margin-left: 10px;
+}
+.elments_buy{
+    margin-top: 20px;
+    color:white;
+}

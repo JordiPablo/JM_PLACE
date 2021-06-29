@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >Administrador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <h1 class = "title col-12" > cuenta administrador </h1>
+
+    <div class= "col-12" id= "all_suppliers">
+        <table class="table text-center " >
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Telefono</th>
+                    <th scope="col">Nº productos</th>
+                    <th scope="col"> </th>
+                </tr>
+
+            </thead>
+            <tbody>
+
+                {% for user in obj_all_users%}
+                <tr>
+                    <th scope="row">{{user.name}}</th>
+                    <td>{{user.email}}</td>
+                    <td>{{user.phone}}</td>
+                    <td>{{num_products [loop.index-1]}}</td>
+                    <td>
+                        <form action="", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Ver/Modificar</button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>

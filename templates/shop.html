@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >JM Tienda</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <div class="col-12" style="display:flex ">
+        <div class = "col-1 div_top">
+            <p class="card-text top_shop">Hola, {{user_obj.name}}</p> 
+        </div>
+
+        <div class= "col-4 "style="display:flex ">
+            <div class="col-5">   
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-cart div_carrito carrito" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <p class="card-text elments_buy"> {{user_obj.num_buyed}} productos </p>
+            </div>
+            <div class = "col-7">
+                <form action="/cesta/{{user_obj.id}}/{{user_obj.num_buyed}} ">
+                <button type="submit" class="btn btn btn-success btn-sm button_cesta" >Ir a la cesta</button>
+            </form>
+            </div>  
+        </div>  
+
+        <div class="col-2"></div>
+        <div class="col-5">
+            <form action="/close_sesion/{{user_obj.id}}", method="POST">
+                <button type="submit" class="btn btn btn-success btn-sm button_close_session" >Cerrar sessión</button>
+            </form>
+        </div>
+
+    </div> 
+
+
+
+    <div class="col-12">
+        <h1 class = "title col-12" > JM Tienda </h1>
+    </div>
+    <div class="col-12" style="display:flex">
+        {% for product in lista_de_productos %}
+
+        <div class="card col-2 card_columns card_clas">
+                <h3 class="card-header text-center">{{ product.name }}</h3>
+
+                <img src= "../images/minion.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text">{{product.description}}</p>
+                </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Referencia: {{product.reference}} </li>
+                <li class="list-group-item">Precio: {{product.price}} €</li>
+                <li class="list-group-item">Unidades disponibles: {{product.numItems}}</li>
+                
+                <div class="col text-center ">
+                    <form action="/buy_product/{{product.id}}/{{user_obj.id}}/{{product.reference}}/", method="POST">
+                        <button type="submit" class="btn btn btn-success btn-sm button_buy" >Añadir a la cesta</button>
+                    </form>
+                </div>
+                
+            </ul>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>

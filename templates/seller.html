@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >JM Vendedores</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+    <!-- link de la gráfica-->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+    
+</head>
+<body>
+
+            <nav class="navbar navbar-expand-lg navbar navbar-dark col-12">
+                <div class="col-3" >
+                    <h1 style="color: white; ">JM Vendedores </h1>
+                </div>
+                <div class="collapse navbar-collapse col-6" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link " href="#my_products">Mis productos<span class="sr-only">(current)</span></a>
+                        <a class="nav-item nav-link" href="#add_product">Añadir producto</a>
+                        <a class="nav-item nav-link" href="#my_estadistics">Estadisticas</a>
+                        <a class="nav-item nav-link" href="#best_sellers">Los más vendidos en la web</a>
+                        <a class="nav-item nav-link" href="#contact">Contacto</a>
+                    </div>
+                </div>
+                <div class="col-3 top_seller" style="display: flex;">
+                    <div class="col-7" style="padding: 0.5rem 1rem;">
+                        <p class="card-text" >Hola, {{user_obj.name}}</p> 
+                    </div>
+                    <div class="col-5 " style="padding: 0.5rem 1rem;">
+                        <form action="/close_sesion/{{user_obj.id}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_close_session_seller" >Cerrar sessión</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+  
+
+
+    <div class= "col-12" id= "my_products">
+        <table class="table text-center " >
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Referencia</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col"> </th>
+                </tr>
+
+            </thead>
+            <tbody>
+
+                {% for product in all_products%}
+                <tr>
+                    <th scope="row">{{product.reference}}</th>
+                    <td>{{product.name}}</td>
+                    <td>{{product.numItems}}</td>
+                    <td>{{product.price}}</td>
+                    <td>
+                        <form action="/modify_product/{{product.id}}/{{user_obj.id}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Ver/Modificar</button>
+                        </form>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h1 class="add_product" id="add_product"> Añadir Producto</h1>
+        <div class="container" style="margin-left: 10px;">
+            <div id="login-row" class="row">
+                <div id="login-column" class="col-md-5">
+                    <div id="login-box" class="col-md-12">
+                        <form id="login-form" class="form" action="/add_product/{{user_obj.id}}" method="post">
+                            <div class = "row">
+                                <div class="form-group col-4">
+                                    <label for="reference" class="singinletter">Referencia:</label><br>
+                                    <input type="text" name="reference" id="reference" class="form-control">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="name" class="singinletter">Nombre:</label><br>
+                                    <input type="text" name="name" id="name" class="form-control">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="price" class="singinletter">Precio:</label><br>
+                                    <input type="number" name="price" id="price" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class ="row">
+                                <div class="form-group col-6">
+                                    <label for="numItems" class="singinletter">Cantidad: </label><br>
+                                    <input type="number" name="numItems" id="numItems" class="form-control ">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="warehouse_place" class="singinletter"> Ubicación almacén: </label><br>
+                                    <input type="text" name="warehouse_place" id="warehouse_place" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone" class="singinletter">Descripción: </label><br>
+                                <textarea class="form-control" id="description" name="description" rows="8"></textarea>
+                            </div>
+  
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info btn-md" >Subir producto</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+    <div class="col-12" > 
+        <h1 class="estadistics" id="my_estadistics"> Venta de mis productos </h1>
+        <canvas id="chart" width="600" height="400" ></canvas>
+        <script>
+    
+          // bar chart data
+          var barData = {
+            labels : [
+              {% for item in labels %}
+                "{{ item }}",
+              {% endfor %}
+            ],
+    
+            datasets : [{
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "white",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(151,187,205,1)",
+              bezierCurve : false,
+              data : [
+            {% for item in values %}
+                  {{ item }},
+                {% endfor %}]
+              }
+        ]
+          }
+    
+          Chart.defaults.global.animationSteps = 50;
+          Chart.defaults.global.tooltipYPadding = 16;
+          Chart.defaults.global.tooltipCornerRadius = 0;
+          Chart.defaults.global.tooltipTitleFontStyle = "normal";
+          Chart.defaults.global.tooltipFillColor = "grey";
+          Chart.defaults.global.animationEasing = "easeOutBounce";
+          Chart.defaults.global.responsive = false;
+          Chart.defaults.global.scaleLineColor = "white";
+          Chart.defaults.global.scaleFontSize = 16;
+    
+          // get bar chart canvas
+          var mychart = document.getElementById("chart").getContext("2d");
+    
+          steps = 10
+          max = {{ maxi }}
+          // draw bar chart
+          var LineChartDemo = new Chart(mychart).Line(barData, {
+            scaleOverride: true,
+            scaleSteps: steps,
+            scaleStepWidth: Math.ceil(max / steps),
+            scaleStartValue: 0,
+            scaleShowVerticalLines: true,
+            scaleShowGridLines : true,
+            barShowStroke : true,
+            scaleShowLabels: true,
+            bezierCurve: false,
+          });
+    
+        </script>
+    </div>
+
+
+
+
+
+    <div class="col-12" > 
+        <h1 class="estadistics" id="best_sellers"> Los productos más vendidos en la web</h1>
+        <!--tabla con los productos más vendidos en la web-->
+        <canvas id="chart_all_products" width="600" height="400" ></canvas>
+        <script>
+    
+          // bar chart data
+          var barData = {
+            labels : [
+              {% for item in labels_all %}
+                "{{ item }}",
+              {% endfor %}
+            ],
+    
+            datasets : [{
+              fillColor: "rgba(151,187,205,0.2)",
+              strokeColor: "white",
+              pointColor: "rgba(151,187,205,1)",
+              pointStrokeColor: "#fff",
+              pointHighlightFill: "#fff",
+              pointHighlightStroke: "rgba(151,187,205,1)",
+              bezierCurve : false,
+              data : [
+            {% for item in values_all %}
+                  {{ item }},
+                {% endfor %}]
+              }
+        ]
+          }
+    
+          Chart.defaults.global.animationSteps = 50;
+          Chart.defaults.global.tooltipYPadding = 16;
+          Chart.defaults.global.tooltipCornerRadius = 0;
+          Chart.defaults.global.tooltipTitleFontStyle = "normal";
+          Chart.defaults.global.tooltipFillColor = "grey";
+          Chart.defaults.global.animationEasing = "easeOutBounce";
+          Chart.defaults.global.responsive = false;
+          Chart.defaults.global.scaleLineColor = "white";
+          Chart.defaults.global.scaleFontSize = 16;
+    
+          // get bar chart canvas
+          var mychart = document.getElementById("chart_all_products").getContext("2d");
+    
+          steps = 10
+          max = {{ max_all }}
+          // draw bar chart
+          var LineChartDemo = new Chart(mychart).Line(barData, {
+            scaleOverride: true,
+            scaleSteps: steps,
+            scaleStepWidth: Math.ceil(max / steps),
+            scaleStartValue: 0,
+            scaleShowVerticalLines: true,
+            scaleShowGridLines : true,
+            barShowStroke : true,
+            scaleShowLabels: true,
+            bezierCurve: false,
+          });
+    
+        </script>
+
+    </div>
+
+
+
+
+
+
+    <div class="col-12" > 
+        <h1 class="estadistics" id="contact"> Contacto</h1>
+    </div>
+    <div class="col-12" > 
+        <td class="row">Telf: +34 657 478 598</td>
+    </div>
+    <div class="col-12" > 
+        <td class="row">Email: j.m.support@gmail.com</td>
+    </div>
+    <div class="col-12" style="margin-bottom: 40px;"> 
+        <td>c/Permanyer 34, Sabadell (Barcelona) 08205</td>
+    </div>
+        
+        
+
+
+</body>

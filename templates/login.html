@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >JM Market</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<!------ card from login ---------->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <h1 class="title"> Bienvenido a JM Market</h1>
+    <div id="login"></div>
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6">
+                    <div id="login-box" class="col-md-12">
+
+                        <form id="login-form" class="form" action="/login" method="post">
+                            <div class="form-group">
+                                <label for="username" class="singinletter">Email:</label><br>
+                                <input type="text" name="email" id="username" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="singinletter">Contraseña:</label><br>
+                                <input type="password" name="password" id="password" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <button  type="submit" name="submit" class="btn btn-primary button_iniciarSesion"> Iniciar sesión</button>
+                            </div>
+                        </form>
+                            <div id="register-link" class="text-right">
+                                <h2 class="regiterfont">¿Todavia no te has registrdo?</h2>
+                                <a href="/signup" class="singinletter">Registrarse ahora</a>
+                            </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
