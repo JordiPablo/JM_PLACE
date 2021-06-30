@@ -5,7 +5,9 @@
     <title >Administrador</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
-
+    <!-- link de la gráfica-->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js'></script>
+    
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar navbar-dark col-12">
@@ -16,7 +18,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link " href="#all_suppliers"> Proveedores <span class="sr-only">(current)</span></a>
                 <a class="nav-item nav-link" href="#all_buyers">Compradores</a>
-                <a class="nav-item nav-link" href="#">Los más vendidos en la web</a>
+                <a class="nav-item nav-link" href="#best_sellers">Los más vendidos en la web</a>
             </div>
         </div>
         <div class="col-3 top_seller" style="display: flex;">
@@ -102,4 +104,70 @@
         </tbody>
     </table>
 </div>
+
+<div class="col-12" > 
+    <h1 class="estadistics" id="best_sellers"> Los productos más vendidos en la web</h1>
+    <canvas id="chart_all_products" width="600" height="400" ></canvas>
+    <script>
+
+      // bar chart data
+      var barData = {
+        labels : [
+          {% for item in labels_all %}
+            "{{ item }}",
+          {% endfor %}
+        ],
+
+        datasets : [{
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "white",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          bezierCurve : false,
+          data : [
+        {% for item in values_all %}
+              {{ item }},
+            {% endfor %}]
+          }
+    ]
+      }
+
+      Chart.defaults.global.animationSteps = 50;
+      Chart.defaults.global.tooltipYPadding = 16;
+      Chart.defaults.global.tooltipCornerRadius = 0;
+      Chart.defaults.global.tooltipTitleFontStyle = "normal";
+      Chart.defaults.global.tooltipFillColor = "grey";
+      Chart.defaults.global.animationEasing = "easeOutBounce";
+      Chart.defaults.global.responsive = false;
+      Chart.defaults.global.scaleLineColor = "white";
+      Chart.defaults.global.scaleFontSize = 16;
+
+      // get bar chart canvas
+      var mychart = document.getElementById("chart_all_products").getContext("2d");
+
+      steps = 10
+      max = {{ max_all }}
+      // draw bar chart
+      var LineChartDemo = new Chart(mychart).Line(barData, {
+        scaleOverride: true,
+        scaleSteps: steps,
+        scaleStepWidth: Math.ceil(max / steps),
+        scaleStartValue: 0,
+        scaleShowVerticalLines: true,
+        scaleShowGridLines : true,
+        barShowStroke : true,
+        scaleShowLabels: true,
+        bezierCurve: false,
+      });
+
+    </script>
+
+</div>
+
+
+
+
+
 </body>

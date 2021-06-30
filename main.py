@@ -129,11 +129,29 @@ def login():
                         all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
                         num_products = len (all_products_)
                         list_num_products.append(num_products) 
+                
+                dic_sold_all ={}
+                list_sold_all=[]
+                list_value_sold_all=[] 
+                pb_seller_all = db.session.query(Buyed).all()
 
+                for product in todos_los_productos: #declarada al inicio
+                    if product.name not in dic_sold_all:
+                        dic_sold_all[product.name]=0
+                    for pb in pb_seller_all:
+                        if product.reference == pb.ref_PBuyed:
+                            dic_sold_all [product.name] += pb.cuantity_PBuyed
 
+                for name_all, value_all in dic_sold_all.items ():
+                    list_sold_all.append(name_all)
+                    list_value_sold_all.append(int(value_all))
 
+                if list_value_sold_all==[]: 
+                    list_value_sold_all =[0] 
+                
+                max_all= max (list_value_sold_all)
 
-                return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products, obj_all_users_buyers=all_buyers)
+                return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
 
     return render_template('wrong_login.html')
