@@ -12,7 +12,7 @@
         <h1 class = "title col-12" > Editar producto </h1>
     </div>
 
-    <form action="/confirm_modify/{{product_obj.id}}/{{user_obj.id}}", method="POST">
+    <form action="/confirm_modify/{{product_obj.id}}/{{user_obj.id}}?admin_id={{admin_user}}", method="POST">
         <div class="col-12" style="display:flex">
             
             <div class="card col-4 card_columns card_clas">
@@ -44,7 +44,7 @@
     </form>
                         </div>
                         <div class="col-6">
-                            <form action="/delete_product/{{product_obj.id}}/{{user_obj.id}}", method="POST">
+                            <form action="/delete_product/{{product_obj.id}}/{{user_obj.id}}?admin_id={{admin_user}}", method="POST">
                                 <button type="submit" class="btn btn btn-success btn-lg button_delete_seller" >Eliminar producto</button>
                             </form>
                         </div>

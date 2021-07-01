@@ -57,8 +57,9 @@
                     <td>{{user.email}}</td>
                     <td>{{user.phone}}</td>
                     <td>{{num_products [loop.index-1]}}</td>
+
                     <td>
-                        <form action="", method="POST">
+                        <form action="/see_sellers/{{user.id}}/{{user_obj.id}}", method="POST">
                             <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Ver/Modificar</button>
                         </form>
                     </td>

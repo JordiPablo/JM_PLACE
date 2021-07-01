@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >admin_seller</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+</head>
+<body>
+    <div class="col-12">
+        <h1 class = "title col-12" > Administrar proveedor</h1>
+    </div>
+
+    <div class="col-12">
+        <h1 class = "title col-3" style="font-size: 30px;" > Datos del vendedor:</h1>
+    </div>
+
+    <div class= "col-12" id= "all_suppliers">
+        <table class="table text-center " >
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Password </th>
+                    <th scope="col">Provinica </th>
+                    <th scope="col">Sexo </th>
+                    <th scope="col"> </th>
+
+                </tr>
+
+            </thead>
+            <tbody style="color:white">
+                <tr>
+                    <th scope="row">{{obj_user.name}}</th>
+                    <td>{{obj_user.surnames}}</td>
+                    <td>{{obj_user.phone}}</td>
+                    <td>{{obj_user.email}}</td>
+                    <td>{{obj_user.password}}</td>                  
+                    <td>{{obj_user.province}}</td>
+                    <td>{{obj_user.sex}}</td>
+                    <td>
+                        <form action="/modify_seller/{{obj_user.id}}/{{admin_id}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Modificar</button>
+                        </form>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-12">
+        <h1 class = "title col-3" style="font-size: 30px;" > Productos del vendedor:</h1>
+    </div>
+
+    <div class="col-12" style="display:flex">
+        {% for product in all_products %}
+
+        <div class="card col-2 card_columns card_clas">
+                <h3 class="card-header text-center">{{ product.name }}</h3>
+
+                <img src= "../images/minion.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <p class="card-text">{{product.description}}</p>
+                </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Referencia: {{product.reference}} </li>
+                <li class="list-group-item">Precio: {{product.price}} €</li>
+                <li class="list-group-item">Unidades disponibles: {{product.numItems}}</li>
+                
+                <div class="col-12" style="display:flex">
+                    <div class="col-6">
+                        <form action="/modify_product/{{product.id}}/{{obj_user.id}}/{{admin_id}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_modify" >Modificar</button>
+                        </form>
+                    </div>
+                    <div class="col-6">
+                        <form action="/delete_product/{{product.id}}/{{obj_user.id}}", method="POST">
+                            <button type="submit" class="btn btn btn-success btn-sm button_delete_seller" >Bloquear</button>
+                        </form>
+                    </div>
+                </div>
+                
+            </ul>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</body>

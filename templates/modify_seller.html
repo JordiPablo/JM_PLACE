@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang ="en">
+<head>
+    <meta charset ="UTF-8">
+    <title >Modificar vendedor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<!------ card from login ---------->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+
+</head>
+<body>
+    <h1 class="title"> Modificar datos del usuario</h1>
+    <div id="login "></div>
+        <div class="container">
+            <div id="login-row" class="row">
+                <div id="login-column" class="col-md-3">
+                    <div id="login-box" class="col-md-12">
+                        <form action="/confirm_modfy_seller/{{obj_user.id}}/{{admin_id}}/{{obj_user.type}}" id="login-form" class="form" action="sign_up" method="post">
+                            <div class = "row">
+                                <div class="form-group col-6">
+                                    <label for="new_name" class="singinletter">Nombre:</label><br>
+                                    <input type="text" name="new_name" id="new_name" class="form-control">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="new_surnames" class="singinletter">Apellidos:</label><br>
+                                    <input type="text" name="new_surnames" id="new_surnames" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label for="new_sex" class="singinletter">Sexo:  </label>
+                                    <select class="form-select" id="new_sex" name="new_sex">
+                                    <option name="new_sex" value ="Hombre">Hombre</option>
+                                    <option name="new_sex" value ="Mujer">Mujer</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-6">
+                                    <label for="new_province" class="singinletter">Provincia:  </label>
+                                    <select class="form-select" id="new_province" name="new_province">
+                                    <option name="new_province" value ="Barcelona">Barcelona</option>
+                                    <option name="new_province" value ="Lleida">Lleida</option>
+                                    <option name="new_rovince" value ="Tarragona">Tarragona</option>
+                                    <option name="new_province" value ="Gerona">Gerona</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="new_phone" class="singinletter">Móvil: </label><br>
+                                <input type="text" name="new_phone" id="phone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="new_mail" class="singinletter">Email: </label><br>
+                                <input type="text" name="new_email" id="email" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="new_password" class="singinletter">Contraseña: </label><br>
+                                <input type="text" name="new_password" id="password" class="form-control">
+                            </div>
+                            
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-info btn-md" >Modificar usuario:</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

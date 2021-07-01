@@ -113,22 +113,22 @@ def login():
             if user.type == 'Administrador':
 
                 all_sellers=db.session.query(User).filter_by(type = 'Vendedor').all()
-                list_num_products= []
-                for user in all_sellers:
+                list_num_products_seller= []
+                for user1 in all_sellers:
                     
-                    if user.type == 'Vendedor':
-                        all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
+                    if user1.type == 'Vendedor':
+                        all_products_ = db.session.query(Product).filter_by(id_suplier = user1.id).all()
                         num_products = len (all_products_)
-                        list_num_products.append(num_products)
+                        list_num_products_seller.append(num_products)
 
                 all_buyers=db.session.query(User).filter_by(type = 'Comprador').all()
-                list_num_products= []
+                list_num_products_buyers= []
                 for user_buyer in all_buyers:
                     
                     if user_buyer.type == 'Comprador':
                         all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
                         num_products = len (all_products_)
-                        list_num_products.append(num_products) 
+                        list_num_products_buyers.append(num_products) 
                 
                 dic_sold_all ={}
                 list_sold_all=[]
@@ -149,9 +149,9 @@ def login():
                 if list_value_sold_all==[]: 
                     list_value_sold_all =[0] 
                 
-                max_all= max (list_value_sold_all)
-
-                return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
+            max_all= max (list_value_sold_all)
+            print (list_value_sold_all)
+            return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products_seller, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
 
     return render_template('wrong_login.html')
@@ -297,15 +297,16 @@ def add_product (iduser):
 
     return render_template ("seller.html",user_obj = user, all_products= list_products, maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
-@app.route ('/modify_product/<product_id>/<user_id>',methods=['POST'])
-def modify_product (product_id,user_id):
+@app.route ('/modify_product/<product_id>/<user_id>/<admin_user>',methods=['POST'])
+def modify_product (product_id,user_id,admin_user=None):
     product = db.session.query(Product).filter_by(id=int(product_id)).first()
     user = db.session.query(User).filter_by(id=int(user_id)).first()
 
-    return render_template("modify_product.html",product_obj=product,user_obj=user)
+    return render_template("modify_product.html",product_obj=product,user_obj=user,admin_user=admin_user)
 
 @app.route ('/delete_product/<product_id>/<user_id>', methods=['POST'])
 def delte_product (product_id,user_id):
+    admin_id=request.args.get('admin_id')
     print(product_id)
     print (user_id)
     db.session.query(Product).filter_by(id=int(product_id)).delete()
@@ -359,11 +360,17 @@ def delte_product (product_id,user_id):
         list_value_sold_all =[0] 
     
     max_all= max (list_value_sold_all)
-    return render_template('seller.html',user_obj=user,all_products=list_products,maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
+
+    if admin_id == None:
+        return render_template('seller.html',user_obj=user,all_products=list_products,maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
+    if admin_id != None:
+        return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
+
 
 
 @app.route ('/confirm_modify/<product_id>/<user_id>', methods = ['POST'])
 def confirm_modify (product_id,user_id):
+    admin_id=request.args.get('admin_id')
     product = db.session.query(Product).filter_by(id=int(product_id)).first()
     product.name = request.form ['new_name']
     product.description = request.form ['new_description']
@@ -420,8 +427,43 @@ def confirm_modify (product_id,user_id):
         list_value_sold_all =[0] 
     
     max_all= max (list_value_sold_all)
-    return render_template('seller.html',user_obj=user,all_products=list_products,maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
+    if admin_id == None:
+        return render_template('seller.html',user_obj=user,all_products=list_products,maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
+    if admin_id != None:
+        return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
+
+
+@app.route ('/see_sellers/<user_id>/<admin_id>', methods=['POST'])
+def see_sellers (user_id,admin_id):
+    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    list_products = db.session.query(Product).filter_by(id_suplier=int(user_id)).all()
+    return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
+
+
+@app.route ('/modify_seller/<user_id>/<admin_id>', methods=['POST'])
+def modify_seller (user_id,admin_id):
+    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    return render_template ('modify_seller.html',obj_user=user,admin_id=admin_id)
+
+@app.route ('/confirm_modfy_seller/<user_id>/<admin_id>/<user_type>', methods=['POST'])
+def confirm_modfy_seller (user_id,admin_id,user_type):
+    user = db.session.query(User).filter_by(id=int(user_id)).first()
+
+    user.name = request.form ['new_name']
+    user.surnames = request.form ['new_surnames']
+    user.sex = request.form ['new_sex']
+    user.phone = request.form ['new_phone']
+    user.province = request.form ['new_province']
+    user.email = request.form ['new_email']
+    user.password = request.form ['new_password']
+    user.type = user_type
+    db.session.commit()
+
+    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    list_products = db.session.query(Product).filter_by(id_suplier=int(user_id)).all()
+    
+    return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
 
 
 if __name__=='__main__':
