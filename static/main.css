@@ -80,14 +80,14 @@ body{
 }
 .button_modify{
     float: left!important;
-    margin-left: 10px;
+    margin-left: 6px;
     margin-top: 5px;
     background-color: orange !important;
     border-color: orange !important;
 }
 .button_delete_seller{
     float: right!important;
-    margin-right: 10px;
+    margin-right: 6px;
     margin-top: 5px;
     background-color: red !important;
     border-color: red !important;

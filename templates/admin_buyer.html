@@ -2,17 +2,17 @@
 <html lang ="en">
 <head>
     <meta charset ="UTF-8">
-    <title >admin_seller</title>
+    <title >admin_buyer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@4.5.2/dist/journal/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
 </head>
 <body>
     <div class="col-12">
-        <h1 class = "title col-12" > Administrar proveedor</h1>
+        <h1 class = "title col-12" > Administrar comprador</h1>
     </div>
 
     <div class="col-12">
-        <h1 class = "title col-3" style="font-size: 30px;" > Datos del vendedor:</h1>
+        <h1 class = "title col-3" style="font-size: 30px;" > Datos del comprador:</h1>
     </div>
 
     <div class= "col-12" id= "all_suppliers">
@@ -57,9 +57,4 @@
         </table>
     </div>
 
-    <div class="col-12">
-        <h1 class = "title col-6" style="font-size: 30px;" > Productos totales comprados: {{obj_user.total_buyed}}</h1>
-    </div>
-
-    
 </body>

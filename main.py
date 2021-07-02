@@ -515,6 +515,13 @@ def delete_user (user_id,admin_id):
     
     return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products_seller, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
+@app.route ('/modify_buyer/<user_id>/<admin_id>', methods=['POST'])
+def modify_buyer (user_id,admin_id):
+    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    return render_template ('admin_buyer.html',obj_user=user,admin_id=admin_id)
+
+
+
 if __name__=='__main__':
     db.Base.metadata.create_all(db.engine)
     app.run (debug=True)

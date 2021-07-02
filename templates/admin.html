@@ -95,7 +95,7 @@
                 <td>{{user.phone}}</td>
                 <td>{{user.total_buyed}}</td>
                 <td>
-                    <form action="", method="POST">
+                    <form action="/modify_buyer/{{user.id}}/{{user_obj.id}}", method="POST">
                         <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Ver/Modificar</button>
                     </form>
                 </td>
