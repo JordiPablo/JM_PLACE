@@ -27,6 +27,7 @@
                     <th scope="col">Provinica </th>
                     <th scope="col">Sexo </th>
                     <th scope="col"> </th>
+                    <th scope="col"> </th>
 
                 </tr>
 
@@ -43,6 +44,11 @@
                     <td>
                         <form action="/modify_seller/{{obj_user.id}}/{{admin_id}}", method="POST">
                             <button type="submit" class="btn btn btn-success btn-sm button_ver_modificar " > Modificar</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action = "/delete_user/{{obj_user.id}}/{{admin_id}}" method="post">
+                                <button type="submit" class="btn btn-info btn-sm " style="float: right color ; background-color: red; border-color: red;" >Eliminar usuario</button>
                         </form>
                     </td>
                 </tr>

@@ -465,6 +465,55 @@ def confirm_modfy_seller (user_id,admin_id,user_type):
     
     return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
 
+@app.route ('/delete_user/<user_id>/<admin_id>', methods=['POST'])
+def delete_user (user_id,admin_id):
+    db.session.query(User).filter_by(id=int(user_id)).delete()
+    db.session.query(Product).filter_by(id_suplier=int(user_id)).delete()
+    user = db.session.query(User).filter_by(id=int(admin_id)).first()
+
+    all_sellers=db.session.query(User).filter_by(type = 'Vendedor').all()
+    list_num_products_seller= []
+    for user1 in all_sellers:
+        
+        if user1.type == 'Vendedor':
+            all_products_ = db.session.query(Product).filter_by(id_suplier = user1.id).all()
+            num_products = len (all_products_)
+            list_num_products_seller.append(num_products)
+
+    all_buyers=db.session.query(User).filter_by(type = 'Comprador').all()
+    list_num_products_buyers= []
+    for user_buyer in all_buyers:
+        
+        if user_buyer.type == 'Comprador':
+            all_products_ = db.session.query(Product).filter_by(id_suplier = user.id).all()
+            num_products = len (all_products_)
+            list_num_products_buyers.append(num_products) 
+    
+    dic_sold_all ={}
+    list_sold_all=[]
+    list_value_sold_all=[] 
+    pb_seller_all = db.session.query(Buyed).all()
+
+    todos_los_productos = db.session.query(Product).all()
+    for product in todos_los_productos: 
+        if product.name not in dic_sold_all:
+            dic_sold_all[product.name]=0
+        for pb in pb_seller_all:
+            if product.reference == pb.ref_PBuyed:
+                dic_sold_all [product.name] += pb.cuantity_PBuyed
+
+    for name_all, value_all in dic_sold_all.items ():
+        list_sold_all.append(name_all)
+        list_value_sold_all.append(int(value_all))
+
+    if list_value_sold_all==[]: 
+        list_value_sold_all =[0] 
+    
+    max_all= max (list_value_sold_all)
+    print (list_value_sold_all)
+
+    
+    return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products_seller, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
 if __name__=='__main__':
     db.Base.metadata.create_all(db.engine)
