@@ -522,6 +522,7 @@ def modify_buyer (user_id,admin_id):
 
 
 
+""" Inizialice backend, to start the web"""
 if __name__=='__main__':
     db.Base.metadata.create_all(db.engine)
     app.run (debug=True)
