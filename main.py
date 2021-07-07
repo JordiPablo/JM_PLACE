@@ -1,11 +1,11 @@
-from re import template
 from flask import Flask, render_template,request,redirect,url_for
 from sqlalchemy.orm import session
 from sqlalchemy.sql.elements import Null
 import db
-from models import Carrito, Product,User,Buyed
+import controller
+from db_models import Carrito, Product,User,Buyed
 from datetime import datetime,date,time, timedelta 
-
+import model
 app = Flask (__name__)
 
 
@@ -19,22 +19,14 @@ def signup ():
 
 @app.route ('/shop/<id>/<num_buyed>')
 def shop (id,num_buyed):
-    user= db.session.query(User).filter_by(id=int(id)).first()
-    todos_los_productos = db.session.query(Product).all()
+    user, todos_los_productos= controller.getUserAndAllProducts (id)
     return render_template("shop.html",lista_de_productos=todos_los_productos, user_obj=user,num_buyed=num_buyed)
 
 @app.route ('/close_sesion/<id>', methods = ['POST'])
 def close_sesion (id):
-    all_users= db.session.query(User).all()
-    for user in all_users:
-        if user.id == int(id):
-            user.num_buyed =0
-            user.name_buyed =''
-            db.session.query(Carrito).delete()
-            db.session.commit()
-            return redirect(url_for('home'))
-    return('error')
-
+    controller.closeSessionByUserId(id)
+    return redirect(url_for('home'))
+    
 @app.route('/sign_up',methods = ['POST'])
 def new_client():
     user = User (
@@ -54,7 +46,7 @@ def new_client():
 @app.route('/login',methods = ['POST'])
 def login():
 
-    all_users= db.session.query(User).all()
+    all_users= model.getAllUsers ()
     email = request.form ['email']
     password=request.form ['password']
 
@@ -112,7 +104,7 @@ def login():
             
             if user.type == 'Administrador':
 
-                all_sellers=db.session.query(User).filter_by(type = 'Vendedor').all()
+                all_sellers = model.getAllUserByType('Vendedor')
                 list_num_products_seller= []
                 for user1 in all_sellers:
                     
@@ -121,7 +113,7 @@ def login():
                         num_products = len (all_products_)
                         list_num_products_seller.append(num_products)
 
-                all_buyers=db.session.query(User).filter_by(type = 'Comprador').all()
+                all_buyers= model.getAllUserByType('Comprador')
                 list_num_products_buyers= []
                 for user_buyer in all_buyers:
                     
@@ -165,7 +157,7 @@ def delete_item(referenceC,userid,num_buyed):
     remove_cuantity = db.session.query(Carrito).filter_by(referenceC=referenceC).first()
     num_buyed=int(num_buyed) - remove_cuantity.cantidadC
     db.session.query(Carrito).filter_by(referenceC=referenceC).delete()
-    user= db.session.query(User).filter_by(id=int(userid)).first()
+    user= model.getUserById(userid)
 
     user.num_buyed=num_buyed
     db.session.commit()
@@ -174,7 +166,7 @@ def delete_item(referenceC,userid,num_buyed):
 @app.route ('/cesta/<id>/<num_buyed>')
 def cesta (id,num_buyed):
     all_products_carrito = db.session.query(Carrito).all()
-    user = db.session.query(User).filter_by(id=int(id)).first()
+    user = model.getUserById(id)
 
     return render_template('cesta.html',all_products=all_products_carrito, obj_user=user,num_buyed=num_buyed)
 
@@ -192,7 +184,7 @@ def confirm_buy (id):
         db.session.add(item_bought)
     
     db.session.query(Carrito).delete()
-    user = db.session.query(User).filter_by(id=int(id)).first()
+    user = model.getUserById(id)
     user.num_buyed = 0
     user.total_buyed +=count
     db.session.commit()
@@ -222,7 +214,7 @@ def buy_product(id,userid,reference):
         element_cesta.cantidadC +=1
         db.session.commit()
 
-    all_users= db.session.query(User).all()
+    all_users= model.getAllUsers ()
     for user in all_users:
         if user.id ==int(userid):
             todos_los_productos = db.session.query(Product).all()
@@ -245,7 +237,7 @@ def add_product (iduser):
     )
     db.session.add(product)
     db.session.commit()
-    user = db.session.query(User).filter_by(id=int(iduser)).first()
+    user = model.getUserById(iduser)
     list_products = db.session.query(Product).filter_by(id_suplier=int(iduser))
 
     dic_sold ={}
@@ -300,7 +292,7 @@ def add_product (iduser):
 @app.route ('/modify_product/<product_id>/<user_id>/<admin_user>',methods=['POST'])
 def modify_product (product_id,user_id,admin_user=None):
     product = db.session.query(Product).filter_by(id=int(product_id)).first()
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
 
     return render_template("modify_product.html",product_obj=product,user_obj=user,admin_user=admin_user)
 
@@ -312,7 +304,7 @@ def delte_product (product_id,user_id):
     db.session.query(Product).filter_by(id=int(product_id)).delete()
     db.session.commit()
     list_products = db.session.query(Product).filter_by(id_suplier=int(user_id))
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
 
     dic_sold ={}
     list_sold=[]
@@ -379,7 +371,7 @@ def confirm_modify (product_id,user_id):
     product.warehouse_place = request.form ['new_warehouse_place']
     db.session.commit()
     list_products = db.session.query(Product).filter_by(id_suplier=int(user_id))
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
 
     dic_sold ={}
     list_sold=[]
@@ -436,19 +428,19 @@ def confirm_modify (product_id,user_id):
 
 @app.route ('/see_sellers/<user_id>/<admin_id>', methods=['POST'])
 def see_sellers (user_id,admin_id):
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
     list_products = db.session.query(Product).filter_by(id_suplier=int(user_id)).all()
     return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
 
 
 @app.route ('/modify_seller/<user_id>/<admin_id>', methods=['POST'])
 def modify_seller (user_id,admin_id):
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
     return render_template ('modify_seller.html',obj_user=user,admin_id=admin_id)
 
 @app.route ('/confirm_modfy_seller/<user_id>/<admin_id>/<user_type>', methods=['POST'])
 def confirm_modfy_seller (user_id,admin_id,user_type):
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
 
     user.name = request.form ['new_name']
     user.surnames = request.form ['new_surnames']
@@ -460,18 +452,18 @@ def confirm_modfy_seller (user_id,admin_id,user_type):
     user.type = user_type
     db.session.commit()
 
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
     list_products = db.session.query(Product).filter_by(id_suplier=int(user_id)).all()
     
     return render_template ('admin_seller.html',obj_user=user,all_products=list_products,admin_id=admin_id)
 
 @app.route ('/delete_user/<user_id>/<admin_id>', methods=['POST'])
 def delete_user (user_id,admin_id):
-    db.session.query(User).filter_by(id=int(user_id)).delete()
+    model.deleteUserById (user_id)
     db.session.query(Product).filter_by(id_suplier=int(user_id)).delete()
-    user = db.session.query(User).filter_by(id=int(admin_id)).first()
+    user = model.getUserById(admin_id)
 
-    all_sellers=db.session.query(User).filter_by(type = 'Vendedor').all()
+    all_sellers =model.getAllUserByType('Vendedor')
     list_num_products_seller= []
     for user1 in all_sellers:
         
@@ -480,7 +472,7 @@ def delete_user (user_id,admin_id):
             num_products = len (all_products_)
             list_num_products_seller.append(num_products)
 
-    all_buyers=db.session.query(User).filter_by(type = 'Comprador').all()
+    all_buyers =model.getAllUserByType('Comprador')
     list_num_products_buyers= []
     for user_buyer in all_buyers:
         
@@ -517,7 +509,7 @@ def delete_user (user_id,admin_id):
 
 @app.route ('/modify_buyer/<user_id>/<admin_id>', methods=['POST'])
 def modify_buyer (user_id,admin_id):
-    user = db.session.query(User).filter_by(id=int(user_id)).first()
+    user = model.getUserById(user_id)
     return render_template ('admin_buyer.html',obj_user=user,admin_id=admin_id)
 
 
