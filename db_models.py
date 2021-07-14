@@ -1,5 +1,4 @@
 
-# from os import name !! quitar sino da bs
 from sqlalchemy.sql.expression import column
 import db
 from sqlalchemy import Column, Integer, String, Boolean
