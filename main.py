@@ -176,7 +176,6 @@ def delte_product (product_id,user_id):
 
 @app.route ('/confirm_modify/<product_id>/<user_id>', methods = ['POST'])
 def confirm_modify (product_id,user_id):
-    admin_id=request.args.get('admin_id')
     product = model.getProductById(product_id) 
     product.name = request.form ['new_name']
     product.description = request.form ['new_description']
@@ -184,55 +183,9 @@ def confirm_modify (product_id,user_id):
     product.numItems = request.form ['new_NumItem']
     product.warehouse_place = request.form ['new_warehouse_place']
     db.session.commit()
-    list_products = model.getProductsBySuplierID(user_id)
-    user = model.getUserById(user_id)
+    admin_id=request.args.get('admin_id')
 
-    dic_sold ={}
-    list_sold=[]
-    list_value_sold=[]
-    for a in list_products:
-        value_sold= model.getBuyedByReference (a.reference)
-        if a.name not in dic_sold:
-            dic_sold [a.name]=0
-
-        if value_sold == None:
-            dic_sold[a.name]= 0                    
-        else:
-            for i in value_sold:
-                dic_sold [a.name] += i.cuantity_PBuyed
-        print (dic_sold)
-
-    for name, value in dic_sold.items ():
-        list_sold.append(name)
-        list_value_sold.append(int(value))
-    
-    if list_value_sold==[]: 
-        list_value_sold =[0]
-         
-    maxi=max(list_value_sold)
-
-    dic_sold_all ={}
-    list_sold_all=[]
-    list_value_sold_all=[]
-    
-    pb_seller_all = model.getAllBuyed ()
-    todos_los_productos = model.getAllProducts()
-    for product in todos_los_productos: #declarada al inicio
-        if product.name not in dic_sold_all:
-            dic_sold_all[product.name]=0
-        for pb in pb_seller_all:
-            if product.reference == pb.ref_PBuyed:
-                dic_sold_all [product.name] += pb.cuantity_PBuyed
-
-
-    for name_all, value_all in dic_sold_all.items ():
-        list_sold_all.append(name_all)
-        list_value_sold_all.append(int(value_all))
-
-    if list_value_sold_all==[]: 
-        list_value_sold_all =[0] 
-    
-    max_all= max (list_value_sold_all)
+    user,list_products,maxi, list_sold, list_value_sold,list_sold_all, list_value_sold_all,max_all = controller.confirmModify(user_id)
 
     if admin_id == None:
         return render_template('seller.html',user_obj=user,all_products=list_products,maxi=maxi, labels=list_sold, values=list_value_sold,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
@@ -273,59 +226,13 @@ def confirm_modfy_seller (user_id,admin_id,user_type):
 
 @app.route ('/delete_user/<user_id>/<admin_id>', methods=['POST'])
 def delete_user (user_id,admin_id):
-    model.deleteUserById (user_id)
-    model.deleteProductByIdSuplier (user_id)
-    user = model.getUserById(admin_id)
-
-    all_sellers =model.getAllUserByType('Vendedor')
-    list_num_products_seller= []
-    for user1 in all_sellers:
-        
-        if user1.type == 'Vendedor':
-            all_products_ = model.getAllProductsBySuplierId (user1.id)
-            num_products = len (all_products_)
-            list_num_products_seller.append(num_products)
-
-    all_buyers =model.getAllUserByType('Comprador')
-    list_num_products_buyers= []
-    for user_buyer in all_buyers:
-        
-        if user_buyer.type == 'Comprador':
-            all_products_ = model.getAllProductsBySuplierId (user1.id)
-            num_products = len (all_products_)
-            list_num_products_buyers.append(num_products) 
-    
-    dic_sold_all ={}
-    list_sold_all=[]
-    list_value_sold_all=[] 
-    pb_seller_all = model.getAllBuyed ()
-
-    todos_los_productos = model.getAllProducts()
-    for product in todos_los_productos: 
-        if product.name not in dic_sold_all:
-            dic_sold_all[product.name]=0
-        for pb in pb_seller_all:
-            if product.reference == pb.ref_PBuyed:
-                dic_sold_all [product.name] += pb.cuantity_PBuyed
-
-    for name_all, value_all in dic_sold_all.items ():
-        list_sold_all.append(name_all)
-        list_value_sold_all.append(int(value_all))
-
-    if list_value_sold_all==[]: 
-        list_value_sold_all =[0] 
-    
-    max_all= max (list_value_sold_all)
-    print (list_value_sold_all)
-
-    
+    user,all_sellers,list_num_products_seller, all_buyers,list_sold_all, list_value_sold_all,max_all = controller.deleteUser(user_id,admin_id)
     return render_template('admin.html',user_obj=user,obj_all_users_sellers=all_sellers,num_products=list_num_products_seller, obj_all_users_buyers=all_buyers,labels_all=list_sold_all, values_all=list_value_sold_all,max_all=max_all)
 
 @app.route ('/modify_buyer/<user_id>/<admin_id>', methods=['POST'])
 def modify_buyer (user_id,admin_id):
     user = model.getUserById(user_id)
     return render_template ('admin_buyer.html',obj_user=user,admin_id=admin_id)
-
 
 
 """ Inizialice backend, to start the web"""

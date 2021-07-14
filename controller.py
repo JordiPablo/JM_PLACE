@@ -218,3 +218,103 @@ def deleteProduct(product_id,user_id):
     
     max_all= max (list_value_sold_all)
     return user,list_products,maxi, list_sold, list_value_sold,list_sold_all, list_value_sold_all,max_all
+
+def deleteUser (user_id,admin_id):
+    model.deleteUserById (user_id)
+    model.deleteProductByIdSuplier (user_id)
+    user = model.getUserById(admin_id)
+
+    all_sellers =model.getAllUserByType('Vendedor')
+    list_num_products_seller= []
+    for user1 in all_sellers:
+        
+        if user1.type == 'Vendedor':
+            all_products_ = model.getAllProductsBySuplierId (user1.id)
+            num_products = len (all_products_)
+            list_num_products_seller.append(num_products)
+
+    all_buyers =model.getAllUserByType('Comprador')
+    list_num_products_buyers= []
+    for user_buyer in all_buyers:
+        
+        if user_buyer.type == 'Comprador':
+            all_products_ = model.getAllProductsBySuplierId (user1.id)
+            num_products = len (all_products_)
+            list_num_products_buyers.append(num_products) 
+    
+    dic_sold_all ={}
+    list_sold_all=[]
+    list_value_sold_all=[] 
+    pb_seller_all = model.getAllBuyed ()
+
+    todos_los_productos = model.getAllProducts()
+    for product in todos_los_productos: 
+        if product.name not in dic_sold_all:
+            dic_sold_all[product.name]=0
+        for pb in pb_seller_all:
+            if product.reference == pb.ref_PBuyed:
+                dic_sold_all [product.name] += pb.cuantity_PBuyed
+
+    for name_all, value_all in dic_sold_all.items ():
+        list_sold_all.append(name_all)
+        list_value_sold_all.append(int(value_all))
+
+    if list_value_sold_all==[]: 
+        list_value_sold_all =[0] 
+    
+    max_all= max (list_value_sold_all)
+    
+    return user,all_sellers,list_num_products_seller, all_buyers,list_sold_all, list_value_sold_all,max_all
+
+def confirmModify (user_id):
+    list_products = model.getProductsBySuplierID(user_id)
+    user = model.getUserById(user_id)
+    
+    
+    dic_sold ={}
+    list_sold=[]
+    list_value_sold=[]
+    for a in list_products:
+        value_sold= model.getBuyedByReference (a.reference)
+        if a.name not in dic_sold:
+            dic_sold [a.name]=0
+
+        if value_sold == None:
+            dic_sold[a.name]= 0                    
+        else:
+            for i in value_sold:
+                dic_sold [a.name] += i.cuantity_PBuyed
+        print (dic_sold)
+
+    for name, value in dic_sold.items ():
+        list_sold.append(name)
+        list_value_sold.append(int(value))
+    
+    if list_value_sold==[]: 
+        list_value_sold =[0]
+         
+    maxi=max(list_value_sold)
+
+    dic_sold_all ={}
+    list_sold_all=[]
+    list_value_sold_all=[]
+    
+    pb_seller_all = model.getAllBuyed ()
+    todos_los_productos = model.getAllProducts()
+    for product in todos_los_productos: #declarada al inicio
+        if product.name not in dic_sold_all:
+            dic_sold_all[product.name]=0
+        for pb in pb_seller_all:
+            if product.reference == pb.ref_PBuyed:
+                dic_sold_all [product.name] += pb.cuantity_PBuyed
+
+
+    for name_all, value_all in dic_sold_all.items ():
+        list_sold_all.append(name_all)
+        list_value_sold_all.append(int(value_all))
+
+    if list_value_sold_all==[]: 
+        list_value_sold_all =[0] 
+    
+    max_all= max (list_value_sold_all)
+    return user,list_products,maxi, list_sold, list_value_sold,list_sold_all, list_value_sold_all,max_all
